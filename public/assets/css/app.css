@@ -346,6 +346,7 @@ a:hover {
 .field {
     display: grid;
     gap: 0.4rem;
+    align-content: start;
 }
 
 .field label {
@@ -366,22 +367,40 @@ a:hover {
     color: var(--text);
 }
 
+.phone-input {
+    display: grid;
+    grid-template-columns: 6.25rem minmax(0, 1fr);
+    gap: 0.55rem;
+}
+
+.phone-input select {
+    padding-inline: 0.55rem;
+    font-weight: 600;
+}
+
 .field input:focus,
 .field select:focus,
 .filters select:focus,
-.status-form select:focus {
+.status-form select:focus,
+.phone-input select:focus,
+.phone-input input:focus {
     outline: 2px solid rgba(15, 118, 110, 0.35);
     border-color: var(--teal);
 }
 
-.field--error input {
+.field--error input,
+.field--error select,
+.field--error .phone-input input,
+.field--error .phone-input select {
     border-color: var(--danger);
 }
 
 .field-error {
     margin: 0;
+    min-height: 1.2rem;
     color: var(--danger);
     font-size: 0.88rem;
+    line-height: 1.2;
 }
 
 .form-hint,
@@ -689,6 +708,10 @@ a:hover {
     .field-row,
     .filters {
         grid-template-columns: 1fr;
+    }
+
+    .phone-input {
+        grid-template-columns: 5rem minmax(0, 1fr);
     }
 
     .admin-title-row {

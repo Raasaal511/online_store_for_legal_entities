@@ -27,6 +27,8 @@ final class LandingController
             'company_name' => '',
             'contact_name' => '',
             'phone' => '',
+            'phone_code' => '+7',
+            'phone_number' => '',
             'email' => '',
         ];
         $errors = $_SESSION['form_errors'] ?? [];
@@ -83,6 +85,8 @@ final class LandingController
             'company_name' => trim((string) ($body['company_name'] ?? '')),
             'contact_name' => trim((string) ($body['contact_name'] ?? '')),
             'phone' => trim((string) ($body['phone'] ?? '')),
+            'phone_code' => trim((string) ($body['phone_code'] ?? '+7')),
+            'phone_number' => trim((string) ($body['phone_number'] ?? '')),
             'email' => trim((string) ($body['email'] ?? '')),
         ];
     }

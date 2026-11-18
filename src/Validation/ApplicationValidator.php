@@ -12,38 +12,62 @@ final class ApplicationValidator
      */
     public function validate(array $input): array
     {
+        $companyName = trim((string) ($input['company_name'] ?? ''));
+        $contactName = trim((string) ($input['contact_name'] ?? ''));
+        $email = trim((string) ($input['email'] ?? ''));
+
+        $code = trim((string) ($input['phone_code'] ?? ''));
+        $number = preg_replace('/\D+/', '', (string) ($input['phone_number'] ?? '')) ?? '';
+
+        if ($code === '' && $number === '' && trim((string) ($input['phone'] ?? '')) !== '') {
+            $split = PhoneRules::split((string) $input['phone']);
+            $code = $split['code'];
+            $number = $split['number'];
+        }
+
+        if ($code === '') {
+            $code = '+7';
+        }
+
+        $phone = PhoneRules::format($code, $number);
+
         $data = [
-            'company_name' => trim((string) ($input['company_name'] ?? '')),
-            'contact_name' => trim((string) ($input['contact_name'] ?? '')),
-            'phone' => trim((string) ($input['phone'] ?? '')),
-            'email' => trim((string) ($input['email'] ?? '')),
+            'company_name' => $companyName,
+            'contact_name' => $contactName,
+            'phone' => $phone,
+            'phone_code' => $code,
+            'phone_number' => $number,
+            'email' => $email,
         ];
 
         $errors = [];
 
-        if ($data['company_name'] === '' || mb_strlen($data['company_name']) < 2) {
+        if ($companyName === '' || mb_strlen($companyName) < 2) {
             $errors['company_name'] = 'Укажите название компании.';
-        } elseif (mb_strlen($data['company_name']) > 255) {
+        } elseif (mb_strlen($companyName) > 255) {
             $errors['company_name'] = 'Название компании слишком длинное.';
         }
 
-        if ($data['contact_name'] === '' || mb_strlen($data['contact_name']) < 2) {
+        if ($contactName === '' || mb_strlen($contactName) < 2) {
             $errors['contact_name'] = 'Укажите имя контактного лица.';
-        } elseif (mb_strlen($data['contact_name']) > 150) {
+        } elseif (mb_strlen($contactName) > 150) {
             $errors['contact_name'] = 'Имя слишком длинное.';
         }
 
-        if ($data['phone'] === '') {
+        if (!PhoneRules::isAllowedCode($code)) {
+            $errors['phone'] = 'Выберите код страны.';
+        } elseif ($number === '') {
             $errors['phone'] = 'Укажите телефон.';
-        } elseif (!$this->isValidPhone($data['phone'])) {
-            $errors['phone'] = 'Введите корректный номер телефона.';
+        } elseif (strlen($number) !== PhoneRules::expectedDigits($code)) {
+            $expected = PhoneRules::expectedDigits($code);
+            $errors['phone'] = "Введите номер полностью: {$expected} цифр после кода страны.";
         }
 
-        if ($data['email'] === '') {
+        if ($email === '') {
             $errors['email'] = 'Укажите электронную почту.';
-        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Введите корректный email.';
-        } elseif (mb_strlen($data['email']) > 190) {
+        } elseif (mb_strlen($email) > 190) {
             $errors['email'] = 'Email слишком длинный.';
         }
 
@@ -52,12 +76,5 @@ final class ApplicationValidator
             'errors' => $errors,
             'data' => $data,
         ];
-    }
-
-    private function isValidPhone(string $phone): bool
-    {
-        $digits = preg_replace('/\D+/', '', $phone) ?? '';
-
-        return strlen($digits) >= 10 && strlen($digits) <= 15;
     }
 }

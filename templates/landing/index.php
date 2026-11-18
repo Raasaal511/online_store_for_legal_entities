@@ -4,6 +4,28 @@
 /** @var array<string, string> $old */
 /** @var array<string, string> $errors */
 /** @var string $appName */
+
+use App\Validation\PhoneRules;
+
+$phoneSplit = PhoneRules::split((string) ($old['phone'] ?? ''));
+$phoneCode = $old['phone_code'] ?? $phoneSplit['code'];
+$phoneNumber = $old['phone_number'] ?? $phoneSplit['number'];
+if ($phoneCode === '+7' && $phoneNumber !== '') {
+    $digits = preg_replace('/\D+/', '', $phoneNumber) ?? '';
+    if (strlen($digits) === 10) {
+        $phoneNumber = sprintf(
+            '(%s) %s-%s-%s',
+            substr($digits, 0, 3),
+            substr($digits, 3, 3),
+            substr($digits, 6, 2),
+            substr($digits, 8, 2)
+        );
+    }
+}
+$countries = PhoneRules::countries();
+$fieldError = static function (array $errors, string $key): string {
+    return isset($errors[$key]) ? (string) $errors[$key] : '';
+};
 ?>
 <main>
     <section class="hero">
@@ -117,9 +139,7 @@
                         <input id="company_name" name="company_name" type="text" required maxlength="255"
                                value="<?= htmlspecialchars($old['company_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                                autocomplete="organization">
-                        <?php if (isset($errors['company_name'])): ?>
-                            <p class="field-error"><?= htmlspecialchars($errors['company_name'], ENT_QUOTES, 'UTF-8') ?></p>
-                        <?php endif; ?>
+                        <p class="field-error" aria-live="polite"><?= htmlspecialchars($fieldError($errors, 'company_name'), ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
 
                     <div class="field <?= isset($errors['contact_name']) ? 'field--error' : '' ?>">
@@ -127,30 +147,37 @@
                         <input id="contact_name" name="contact_name" type="text" required maxlength="150"
                                value="<?= htmlspecialchars($old['contact_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                                autocomplete="name">
-                        <?php if (isset($errors['contact_name'])): ?>
-                            <p class="field-error"><?= htmlspecialchars($errors['contact_name'], ENT_QUOTES, 'UTF-8') ?></p>
-                        <?php endif; ?>
+                        <p class="field-error" aria-live="polite"><?= htmlspecialchars($fieldError($errors, 'contact_name'), ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
 
-                    <div class="field-row">
-                        <div class="field <?= isset($errors['phone']) ? 'field--error' : '' ?>">
-                            <label for="phone">Телефон</label>
-                            <input id="phone" name="phone" type="tel" required
-                                   value="<?= htmlspecialchars($old['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                                   autocomplete="tel" placeholder="+7 (___) ___-__-__">
-                            <?php if (isset($errors['phone'])): ?>
-                                <p class="field-error"><?= htmlspecialchars($errors['phone'], ENT_QUOTES, 'UTF-8') ?></p>
-                            <?php endif; ?>
+                    <div class="field <?= isset($errors['phone']) ? 'field--error' : '' ?>">
+                        <label for="phone_number">Телефон</label>
+                        <div class="phone-input">
+                            <select id="phone_code" name="phone_code" aria-label="Код страны">
+                                <?php foreach ($countries as $code => $meta): ?>
+                                    <option value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>"
+                                        title="<?= htmlspecialchars($meta['label'], ENT_QUOTES, 'UTF-8') ?>"
+                                        <?= $phoneCode === $code ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input id="phone_number" name="phone_number" type="tel" required
+                                   value="<?= htmlspecialchars((string) $phoneNumber, ENT_QUOTES, 'UTF-8') ?>"
+                                   autocomplete="tel-national"
+                                   placeholder="<?= htmlspecialchars($countries[$phoneCode]['placeholder'] ?? '(999) 123-45-67', ENT_QUOTES, 'UTF-8') ?>"
+                                   inputmode="tel">
                         </div>
-                        <div class="field <?= isset($errors['email']) ? 'field--error' : '' ?>">
-                            <label for="email">Электронная почта</label>
-                            <input id="email" name="email" type="email" required maxlength="190"
-                                   value="<?= htmlspecialchars($old['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                                   autocomplete="email">
-                            <?php if (isset($errors['email'])): ?>
-                                <p class="field-error"><?= htmlspecialchars($errors['email'], ENT_QUOTES, 'UTF-8') ?></p>
-                            <?php endif; ?>
-                        </div>
+                        <input type="hidden" id="phone" name="phone" value="<?= htmlspecialchars($old['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        <p class="field-error" aria-live="polite"><?= htmlspecialchars($fieldError($errors, 'phone'), ENT_QUOTES, 'UTF-8') ?></p>
+                    </div>
+
+                    <div class="field <?= isset($errors['email']) ? 'field--error' : '' ?>">
+                        <label for="email">Электронная почта</label>
+                        <input id="email" name="email" type="email" required maxlength="190"
+                               value="<?= htmlspecialchars($old['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                               autocomplete="email">
+                        <p class="field-error" aria-live="polite"><?= htmlspecialchars($fieldError($errors, 'email'), ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
 
                     <button class="btn btn--primary btn--block" type="submit">Отправить заявку</button>
