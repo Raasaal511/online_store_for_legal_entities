@@ -115,9 +115,9 @@ a:hover {
     position: relative;
     overflow: hidden;
     color: #fff;
-    min-height: min(88vh, 720px);
+    min-height: min(68vh, 560px);
     display: grid;
-    align-items: end;
+    align-items: start;
 }
 
 .hero-backdrop {
@@ -131,7 +131,7 @@ a:hover {
 
 .hero-content {
     position: relative;
-    padding: 7rem 0 4.5rem;
+    padding: 3.25rem 0 3.5rem;
     animation: rise 0.8s ease both;
 }
 
@@ -663,7 +663,7 @@ a:hover {
     }
 
     .hero-content {
-        padding-top: 5.5rem;
+        padding-top: 2.5rem;
     }
 
     .nav a:not(.nav-cta) {
