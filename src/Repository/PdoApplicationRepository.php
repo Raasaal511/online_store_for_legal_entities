@@ -87,7 +87,15 @@ final class PdoApplicationRepository implements ApplicationRepositoryInterface
             $params['date_to'] = $filter->dateTo->format('Y-m-d H:i:s');
         }
 
-        $sql .= ' ORDER BY created_at DESC, id DESC';
+        $sortMap = [
+            ApplicationFilter::SORT_CREATED_AT => 'created_at',
+            ApplicationFilter::SORT_COMPANY => 'company_name',
+            ApplicationFilter::SORT_STATUS => 'status',
+            ApplicationFilter::SORT_ID => 'id',
+        ];
+        $sortColumn = $sortMap[$filter->sort] ?? 'created_at';
+        $direction = $filter->direction === ApplicationFilter::DIR_ASC ? 'ASC' : 'DESC';
+        $sql .= " ORDER BY {$sortColumn} {$direction}, id DESC";
 
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);

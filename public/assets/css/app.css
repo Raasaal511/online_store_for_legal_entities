@@ -517,7 +517,7 @@ a:hover {
 
 .filters {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.65rem;
     align-items: end;
     margin-bottom: 0.85rem;
@@ -538,9 +538,11 @@ a:hover {
 }
 
 .filters-actions {
+    grid-column: 1 / -1;
     display: flex;
     gap: 0.45rem;
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .apps-list {

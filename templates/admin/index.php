@@ -6,10 +6,14 @@
 /** @var array{type: string, message: string}|null $flash */
 /** @var string $csrfToken */
 
+use App\Domain\Application\ApplicationFilter;
+
 $statusValue = $filter->status?->value ?? '';
 $qValue = $filter->query ?? '';
 $dateFrom = isset($query['date_from']) ? (string) $query['date_from'] : '';
 $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
+$sortValue = $filter->sort;
+$dirValue = $filter->direction;
 ?>
 <section class="admin-page">
     <div class="admin-title-row">
@@ -47,6 +51,27 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
         <div class="field">
             <label for="date_to">По</label>
             <input id="date_to" name="date_to" type="date" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>">
+        </div>
+        <div class="field">
+            <label for="sort">Сортировка</label>
+            <select id="sort" name="sort">
+                <?php foreach (ApplicationFilter::sortOptions() as $value => $label): ?>
+                    <option value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= $sortValue === $value ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="field">
+            <label for="dir">Порядок</label>
+            <select id="dir" name="dir">
+                <option value="<?= ApplicationFilter::DIR_DESC ?>" <?= $dirValue === ApplicationFilter::DIR_DESC ? 'selected' : '' ?>>
+                    По убыванию
+                </option>
+                <option value="<?= ApplicationFilter::DIR_ASC ?>" <?= $dirValue === ApplicationFilter::DIR_ASC ? 'selected' : '' ?>>
+                    По возрастанию
+                </option>
+            </select>
         </div>
         <div class="filters-actions">
             <a class="btn btn--ghost btn--small" href="/admin">Сбросить</a>
@@ -87,6 +112,8 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
                         <?php if ($qValue !== ''): ?><input type="hidden" name="q" value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <?php if ($dateFrom !== ''): ?><input type="hidden" name="date_from" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <?php if ($dateTo !== ''): ?><input type="hidden" name="date_to" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <?php if ($sortValue !== ApplicationFilter::SORT_CREATED_AT): ?><input type="hidden" name="sort" value="<?= htmlspecialchars($sortValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <?php if ($dirValue !== ApplicationFilter::DIR_DESC): ?><input type="hidden" name="dir" value="<?= htmlspecialchars($dirValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <label class="status-form__label" for="status-<?= (int) $item->id ?>">Сменить статус</label>
                         <select id="status-<?= (int) $item->id ?>" name="status" aria-label="Сменить статус заявки #<?= (int) $item->id ?>">
                             <?php foreach ($statuses as $status): ?>

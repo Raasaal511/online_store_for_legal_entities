@@ -128,6 +128,8 @@ final class AdminController
             'q' => 'q',
             'date_from' => 'date_from',
             'date_to' => 'date_to',
+            'sort' => 'sort',
+            'dir' => 'dir',
         ];
 
         $query = [];

@@ -96,4 +96,28 @@ final class ApplicationServiceTest extends TestCase
         self::assertNotNull($found);
         self::assertSame(ApplicationStatus::Done, $found->status);
     }
+
+    public function testSortsByCompanyAscending(): void
+    {
+        $this->service->submit([
+            'company_name' => 'ООО Ягода',
+            'contact_name' => 'Аня',
+            'phone' => '+7 900 444-44-44',
+            'email' => 'yagoda@test.ru',
+        ]);
+        $this->service->submit([
+            'company_name' => 'ООО Абрикос',
+            'contact_name' => 'Борис',
+            'phone' => '+7 900 555-55-55',
+            'email' => 'abrikos@test.ru',
+        ]);
+
+        $sorted = $this->service->list(new ApplicationFilter(
+            sort: ApplicationFilter::SORT_COMPANY,
+            direction: ApplicationFilter::DIR_ASC,
+        ));
+
+        self::assertSame('ООО Абрикос', $sorted[0]->companyName);
+        self::assertSame('ООО Ягода', $sorted[1]->companyName);
+    }
 }
