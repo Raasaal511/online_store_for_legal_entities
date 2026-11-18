@@ -15,9 +15,9 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
     <div class="admin-title-row">
         <div>
             <h1>Заявки</h1>
-            <p class="section-lead">Все обращения с формы сотрудничества для юридических лиц.</p>
+            <p class="section-lead">Обращения с формы для юридических лиц.</p>
         </div>
-        <p class="count-badge"><?= count($applications) ?> в выборке</p>
+        <p class="count-badge"><?= count($applications) ?></p>
     </div>
 
     <?php if ($flash): ?>
@@ -40,7 +40,7 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
         </div>
         <div class="field">
             <label for="q">Поиск</label>
-            <input id="q" name="q" type="search" placeholder="Компания, имя, телефон, email"
+            <input id="q" name="q" type="search" placeholder="Компания, телефон, email"
                    value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>">
         </div>
         <div class="field">
@@ -52,8 +52,8 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
             <input id="date_to" name="date_to" type="date" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>">
         </div>
         <div class="filters-actions">
-            <button class="btn btn--primary" type="submit">Применить</button>
-            <a class="btn btn--ghost" href="/admin">Сбросить</a>
+            <button class="btn btn--primary btn--small" type="submit">Применить</button>
+            <a class="btn btn--ghost btn--small" href="/admin">Сбросить</a>
         </div>
     </form>
 
@@ -62,64 +62,47 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
             <p>По выбранным фильтрам заявок нет.</p>
         </div>
     <?php else: ?>
-        <div class="table-wrap">
-            <table class="data-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Компания</th>
-                    <th>Контакт</th>
-                    <th>Телефон</th>
-                    <th>Email</th>
-                    <th>Статус</th>
-                    <th>Создана</th>
-                    <th>Действие</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($applications as $item): ?>
-                    <tr>
-                        <td data-label="ID">#<?= (int) $item->id ?></td>
-                        <td data-label="Компания"><?= htmlspecialchars($item->companyName, ENT_QUOTES, 'UTF-8') ?></td>
-                        <td data-label="Контакт"><?= htmlspecialchars($item->contactName, ENT_QUOTES, 'UTF-8') ?></td>
-                        <td data-label="Телефон">
-                            <a href="tel:<?= htmlspecialchars(preg_replace('/\s+/', '', $item->phone) ?? $item->phone, ENT_QUOTES, 'UTF-8') ?>">
-                                <?= htmlspecialchars($item->phone, ENT_QUOTES, 'UTF-8') ?>
-                            </a>
-                        </td>
-                        <td data-label="Email">
-                            <a href="mailto:<?= htmlspecialchars($item->email, ENT_QUOTES, 'UTF-8') ?>">
-                                <?= htmlspecialchars($item->email, ENT_QUOTES, 'UTF-8') ?>
-                            </a>
-                        </td>
-                        <td data-label="Статус">
+        <div class="apps-list" role="list">
+            <?php foreach ($applications as $item): ?>
+                <article class="app-row" role="listitem">
+                    <div class="app-row__main">
+                        <div class="app-row__top">
+                            <span class="app-row__id">#<?= (int) $item->id ?></span>
+                            <h2 class="app-row__company"><?= htmlspecialchars($item->companyName, ENT_QUOTES, 'UTF-8') ?></h2>
                             <span class="status status--<?= htmlspecialchars($item->status->value, ENT_QUOTES, 'UTF-8') ?>">
                                 <?= htmlspecialchars($item->status->label(), ENT_QUOTES, 'UTF-8') ?>
                             </span>
-                        </td>
-                        <td data-label="Создана"><?= htmlspecialchars($item->createdAt->format('d.m.Y H:i'), ENT_QUOTES, 'UTF-8') ?></td>
-                        <td data-label="Действие">
-                            <form method="post" action="/admin/status" class="status-form">
-                                <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
-                                <input type="hidden" name="id" value="<?= (int) $item->id ?>">
-                                <?php if ($statusValue !== ''): ?><input type="hidden" name="filter_status" value="<?= htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
-                                <?php if ($qValue !== ''): ?><input type="hidden" name="q" value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
-                                <?php if ($dateFrom !== ''): ?><input type="hidden" name="date_from" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
-                                <?php if ($dateTo !== ''): ?><input type="hidden" name="date_to" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
-                                <select name="status" aria-label="Сменить статус заявки #<?= (int) $item->id ?>">
-                                    <?php foreach ($statuses as $status): ?>
-                                        <option value="<?= $status->value ?>" <?= $item->status === $status ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($status->label(), ENT_QUOTES, 'UTF-8') ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button class="btn btn--small btn--ghost" type="submit">OK</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+                        </div>
+                        <p class="app-row__meta">
+                            <span><?= htmlspecialchars($item->contactName, ENT_QUOTES, 'UTF-8') ?></span>
+                            <a href="tel:<?= htmlspecialchars(preg_replace('/\s+/', '', $item->phone) ?? $item->phone, ENT_QUOTES, 'UTF-8') ?>">
+                                <?= htmlspecialchars($item->phone, ENT_QUOTES, 'UTF-8') ?>
+                            </a>
+                            <a href="mailto:<?= htmlspecialchars($item->email, ENT_QUOTES, 'UTF-8') ?>">
+                                <?= htmlspecialchars($item->email, ENT_QUOTES, 'UTF-8') ?>
+                            </a>
+                        </p>
+                        <p class="app-row__date"><?= htmlspecialchars($item->createdAt->format('d.m.Y H:i'), ENT_QUOTES, 'UTF-8') ?></p>
+                    </div>
+                    <form method="post" action="/admin/status" class="status-form">
+                        <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="hidden" name="id" value="<?= (int) $item->id ?>">
+                        <?php if ($statusValue !== ''): ?><input type="hidden" name="filter_status" value="<?= htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <?php if ($qValue !== ''): ?><input type="hidden" name="q" value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <?php if ($dateFrom !== ''): ?><input type="hidden" name="date_from" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <?php if ($dateTo !== ''): ?><input type="hidden" name="date_to" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
+                        <label class="sr-only" for="status-<?= (int) $item->id ?>">Статус</label>
+                        <select id="status-<?= (int) $item->id ?>" name="status" aria-label="Сменить статус заявки #<?= (int) $item->id ?>">
+                            <?php foreach ($statuses as $status): ?>
+                                <option value="<?= $status->value ?>" <?= $item->status === $status ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($status->label(), ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button class="btn btn--small btn--ghost" type="submit">OK</button>
+                    </form>
+                </article>
+            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </section>
