@@ -26,9 +26,9 @@ $pdo = new PDO(
     [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
-        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci',
     ]
 );
+$pdo->exec('SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci');
 
 $schema = file_get_contents($basePath . '/sql/schema.sql');
 $seed = file_get_contents($basePath . '/sql/seed.sql');

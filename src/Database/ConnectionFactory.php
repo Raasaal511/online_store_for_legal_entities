@@ -27,10 +27,9 @@ final class ConnectionFactory
         $password = Env::get('DB_PASSWORD', '');
 
         $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $host, $port, $database);
-        $pdo = new PDO($dsn, $username, $password, [
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci',
-        ]);
+        $pdo = new PDO($dsn, $username, $password);
         self::configure($pdo);
+        $pdo->exec('SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci');
 
         return $pdo;
     }

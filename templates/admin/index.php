@@ -13,10 +13,7 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
 ?>
 <section class="admin-page">
     <div class="admin-title-row">
-        <div>
-            <h1>Заявки</h1>
-            <p class="section-lead">Обращения с формы для юридических лиц.</p>
-        </div>
+        <h1>Заявки</h1>
         <p class="count-badge"><?= count($applications) ?></p>
     </div>
 
@@ -26,7 +23,7 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
         </div>
     <?php endif; ?>
 
-    <form class="filters" method="get" action="/admin">
+    <form class="filters" method="get" action="/admin" data-auto-filter>
         <div class="field">
             <label for="status">Статус</label>
             <select id="status" name="status">
@@ -52,7 +49,6 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
             <input id="date_to" name="date_to" type="date" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>">
         </div>
         <div class="filters-actions">
-            <button class="btn btn--primary btn--small" type="submit">Применить</button>
             <a class="btn btn--ghost btn--small" href="/admin">Сбросить</a>
         </div>
     </form>

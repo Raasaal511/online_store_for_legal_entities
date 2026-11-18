@@ -443,13 +443,8 @@ a:hover {
 }
 
 .admin-page h1 {
+    margin: 0;
     font-size: 1.55rem;
-    margin-bottom: 0.25rem;
-}
-
-.admin-page .section-lead {
-    margin-bottom: 0;
-    font-size: 0.95rem;
 }
 
 .admin-title-row {
