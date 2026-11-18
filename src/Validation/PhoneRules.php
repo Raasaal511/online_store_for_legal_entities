@@ -14,7 +14,6 @@ final class PhoneRules
         return [
             '+7' => ['label' => '+7 Россия / Казахстан', 'digits' => 10, 'placeholder' => '(999) 123-45-67'],
             '+375' => ['label' => '+375 Беларусь', 'digits' => 9, 'placeholder' => '29 123-45-67'],
-            '+380' => ['label' => '+380 Украина', 'digits' => 9, 'placeholder' => '67 123-45-67'],
             '+998' => ['label' => '+998 Узбекистан', 'digits' => 9, 'placeholder' => '90 123-45-67'],
             '+996' => ['label' => '+996 Кыргызстан', 'digits' => 9, 'placeholder' => '700 123-456'],
             '+992' => ['label' => '+992 Таджикистан', 'digits' => 9, 'placeholder' => '90 123-45-67'],

@@ -7,7 +7,6 @@
   const phoneRules = {
     '+7': { digits: 10, placeholder: '(999) 123-45-67' },
     '+375': { digits: 9, placeholder: '29 123-45-67' },
-    '+380': { digits: 9, placeholder: '67 123-45-67' },
     '+998': { digits: 9, placeholder: '90 123-45-67' },
     '+996': { digits: 9, placeholder: '700 123-456' },
     '+992': { digits: 9, placeholder: '90 123-45-67' },
