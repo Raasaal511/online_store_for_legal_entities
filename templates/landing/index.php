@@ -76,33 +76,22 @@ $fieldError = static function (array $errors, string $key): string {
                 Базовая шкала зависит от объёма закупки. Для постоянных контрагентов и крупных тендеров
                 рассчитываем персональные условия после короткого брифа.
             </p>
-            <div class="pricing-table-wrap" role="region" aria-label="Шкала оптовых скидок">
-                <table class="pricing-table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Объём заказа</th>
-                        <th scope="col">Условия</th>
-                        <th scope="col">Скидка от розницы</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>от 50 000 ₽</td>
-                        <td>Стартовый оптовый прайс</td>
-                        <td>5%</td>
-                    </tr>
-                    <tr>
-                        <td>от 150 000 ₽</td>
-                        <td>Расширенный ассортимент и резерв на складе</td>
-                        <td>10%</td>
-                    </tr>
-                    <tr>
-                        <td>от 400 000 ₽</td>
-                        <td>Индивидуальный договор и приоритетная отгрузка</td>
-                        <td>до 18%</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="pricing-grid" role="list" aria-label="Шкала оптовых скидок">
+                <article class="pricing-card" role="listitem">
+                    <p class="pricing-card__volume">от 50 000 ₽</p>
+                    <p class="pricing-card__discount">5%</p>
+                    <p class="pricing-card__terms">Стартовый оптовый прайс</p>
+                </article>
+                <article class="pricing-card" role="listitem">
+                    <p class="pricing-card__volume">от 150 000 ₽</p>
+                    <p class="pricing-card__discount">10%</p>
+                    <p class="pricing-card__terms">Расширенный ассортимент и резерв на складе</p>
+                </article>
+                <article class="pricing-card pricing-card--accent" role="listitem">
+                    <p class="pricing-card__volume">от 400 000 ₽</p>
+                    <p class="pricing-card__discount">до 18%</p>
+                    <p class="pricing-card__terms">Индивидуальный договор и приоритетная отгрузка</p>
+                </article>
             </div>
             <p class="pricing-note">
                 Точный процент и отсрочка платежа зависят от категории товаров, частоты поставок и истории оплат.

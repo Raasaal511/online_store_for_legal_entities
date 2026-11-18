@@ -276,34 +276,49 @@ a:hover {
     color: var(--muted);
 }
 
-.pricing-table-wrap {
-    border: 1px solid var(--line);
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.pricing-card {
     background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.15rem 1.2rem 1.25rem;
     box-shadow: var(--shadow);
-    overflow: hidden;
+    min-width: 0;
 }
 
-.pricing-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+.pricing-card--accent {
+    border-color: rgba(15, 118, 110, 0.35);
+    background: linear-gradient(180deg, #ffffff 0%, #f3faf8 100%);
 }
 
-.pricing-table th,
-.pricing-table td {
-    padding: 1rem 1.1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--line);
-    vertical-align: top;
-    word-break: break-word;
-}
-
-.pricing-table th {
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+.pricing-card__volume {
+    margin: 0 0 0.45rem;
     color: var(--muted);
-    background: #f8fafc;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.pricing-card__discount {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.pricing-card__terms {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    overflow-wrap: break-word;
 }
 
 .pricing-note {
@@ -684,7 +699,8 @@ a:hover {
 @media (max-width: 900px) {
     .features,
     .request-grid,
-    .footer-grid {
+    .footer-grid,
+    .pricing-grid {
         grid-template-columns: 1fr;
     }
 
@@ -698,6 +714,33 @@ a:hover {
 
     .nav a:not(.nav-cta) {
         display: none;
+    }
+
+    .pricing-card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "volume discount"
+            "terms terms";
+        gap: 0.25rem 0.75rem;
+        align-items: start;
+    }
+
+    .pricing-card__volume {
+        grid-area: volume;
+        margin: 0;
+    }
+
+    .pricing-card__discount {
+        grid-area: discount;
+        margin: 0;
+        font-size: 1.45rem;
+        justify-self: end;
+    }
+
+    .pricing-card__terms {
+        grid-area: terms;
+        margin-top: 0.35rem;
     }
 }
 
