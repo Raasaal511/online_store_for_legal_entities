@@ -50,28 +50,61 @@ final class LandingController
     {
         $csrf = Bootstrap::csrf();
         $body = $request->body();
+        $wantsJson = $request->wantsJson();
 
         if (!$csrf->isValid(isset($body['_token']) ? (string) $body['_token'] : null)) {
-            $_SESSION['form_errors'] = ['_form' => 'Сессия устарела. Обновите страницу и отправьте заявку ещё раз.'];
+            $message = 'Сессия устарела. Обновите страницу и отправьте заявку ещё раз.';
+            if ($wantsJson) {
+                return Response::json([
+                    'success' => false,
+                    'message' => $message,
+                    'errors' => ['_form' => $message],
+                ], 422);
+            }
+
+            $_SESSION['form_errors'] = ['_form' => $message];
             $_SESSION['old_input'] = $this->extractOld($body);
             return Response::redirect('/#request');
         }
 
         // Honeypot: bots fill hidden field
         if (trim((string) ($body['website'] ?? '')) !== '') {
-            $_SESSION['flash_success'] = 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.';
+            $message = 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.';
+            if ($wantsJson) {
+                return Response::json(['success' => true, 'message' => $message]);
+            }
+
+            $_SESSION['flash_success'] = $message;
             return Response::redirect('/#request');
         }
 
         $result = Bootstrap::applicationService()->submit($body);
 
         if (!$result['success']) {
+            if ($wantsJson) {
+                return Response::json([
+                    'success' => false,
+                    'message' => 'Проверьте заполнение формы.',
+                    'errors' => $result['errors'],
+                    'data' => $result['data'],
+                ], 422);
+            }
+
             $_SESSION['form_errors'] = $result['errors'];
             $_SESSION['old_input'] = $result['data'];
             return Response::redirect('/#request');
         }
 
-        $_SESSION['flash_success'] = 'Заявка принята. Менеджер свяжется с вами в рабочие часы.';
+        $message = 'Заявка принята. Менеджер свяжется с вами в рабочие часы.';
+        if ($wantsJson) {
+            return Response::json([
+                'success' => true,
+                'message' => $message,
+                'csrfToken' => $csrf->token(),
+            ]);
+        }
+
+        $_SESSION['flash_success'] = $message;
         return Response::redirect('/#request');
     }
 

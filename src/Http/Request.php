@@ -41,6 +41,14 @@ final class Request
         return $this->method() === 'POST';
     }
 
+    public function wantsJson(): bool
+    {
+        $accept = strtolower((string) ($this->server['HTTP_ACCEPT'] ?? ''));
+        $requestedWith = strtolower((string) ($this->server['HTTP_X_REQUESTED_WITH'] ?? ''));
+
+        return str_contains($accept, 'application/json') || $requestedWith === 'xmlhttprequest';
+    }
+
     /**
      * @return array<string, mixed>
      */

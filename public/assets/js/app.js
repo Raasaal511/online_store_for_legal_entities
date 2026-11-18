@@ -19,6 +19,8 @@
   const phoneCode = form.querySelector('#phone_code');
   const phoneNumber = form.querySelector('#phone_number');
   const phoneHidden = form.querySelector('#phone');
+  const formAlert = document.getElementById('form-alert');
+  const submitButton = form.querySelector('button[type="submit"]');
 
   const ensureErrorSlot = (field) => {
     let error = field.querySelector('.field-error');
@@ -43,6 +45,30 @@
     if (error) {
       error.textContent = '';
     }
+  };
+
+  const clearAllErrors = () => {
+    form.querySelectorAll('.field').forEach(clearError);
+  };
+
+  const showAlert = (type, message) => {
+    if (!formAlert) {
+      return;
+    }
+    formAlert.hidden = false;
+    formAlert.classList.remove('alert--hidden', 'alert--success', 'alert--error');
+    formAlert.classList.add(type === 'success' ? 'alert--success' : 'alert--error');
+    formAlert.textContent = message;
+  };
+
+  const hideAlert = () => {
+    if (!formAlert) {
+      return;
+    }
+    formAlert.hidden = true;
+    formAlert.classList.add('alert--hidden');
+    formAlert.classList.remove('alert--success', 'alert--error');
+    formAlert.textContent = '';
   };
 
   const onlyDigits = (value) => value.replace(/\D+/g, '');
@@ -93,9 +119,10 @@
     syncPhone();
   }
 
-  form.addEventListener('submit', (event) => {
+  const validateClient = () => {
     let valid = true;
     syncPhone();
+    clearAllErrors();
 
     const checks = [
       {
@@ -137,7 +164,6 @@
       if (!field) {
         return;
       }
-      clearError(field);
       const result = check(input);
       if (result !== true) {
         showError(field, typeof result === 'string' ? result : message);
@@ -145,11 +171,82 @@
       }
     });
 
-    if (!valid) {
-      event.preventDefault();
+    return valid;
+  };
+
+  const applyServerErrors = (errors = {}) => {
+    Object.entries(errors).forEach(([key, message]) => {
+      if (key === '_form') {
+        return;
+      }
+      const selector = key === 'phone' ? '#phone_number' : `[name="${key}"]`;
+      const input = form.querySelector(selector);
+      const field = input ? input.closest('.field') : null;
+      if (field) {
+        showError(field, String(message));
+      }
+    });
+  };
+
+  const resetForm = () => {
+    form.reset();
+    if (phoneCode) {
+      phoneCode.value = '+7';
+    }
+    syncPhone();
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    hideAlert();
+
+    if (!validateClient()) {
       const firstError = form.querySelector('.field--error input, .field--error select');
       if (firstError) {
         firstError.focus();
+      }
+      return;
+    }
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Отправляем…';
+    }
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin',
+      });
+
+      const payload = await response.json();
+
+      if (!payload.success) {
+        applyServerErrors(payload.errors || {});
+        showAlert('error', payload.message || 'Проверьте заполнение формы.');
+        return;
+      }
+
+      resetForm();
+      if (payload.csrfToken) {
+        const tokenInput = form.querySelector('input[name="_token"]');
+        if (tokenInput) {
+          tokenInput.value = payload.csrfToken;
+        }
+      }
+      showAlert('success', payload.message || 'Заявка принята.');
+      formAlert?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (error) {
+      showAlert('error', 'Не удалось отправить заявку. Попробуйте ещё раз.');
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Отправить заявку';
       }
     }
   });

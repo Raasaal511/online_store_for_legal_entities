@@ -120,14 +120,14 @@ $fieldError = static function (array $errors, string $key): string {
                 </p>
             </div>
             <div class="form-panel">
-                <?php if ($flashSuccess): ?>
-                    <div class="alert alert--success" role="status"><?= htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8') ?></div>
-                <?php endif; ?>
-                <?php if (!empty($errors['_form'])): ?>
-                    <div class="alert alert--error" role="alert"><?= htmlspecialchars($errors['_form'], ENT_QUOTES, 'UTF-8') ?></div>
-                <?php endif; ?>
+                <div id="form-alert"
+                     class="alert <?= $flashSuccess ? 'alert--success' : (!empty($errors['_form']) ? 'alert--error' : 'alert--hidden') ?>"
+                     role="status"
+                     <?= ($flashSuccess || !empty($errors['_form'])) ? '' : 'hidden' ?>>
+                    <?= htmlspecialchars($flashSuccess ?? ($errors['_form'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                </div>
 
-                <form class="request-form" method="post" action="/request" novalidate data-validate>
+                <form class="request-form" method="post" action="/request" novalidate data-validate data-ajax>
                     <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="hp" aria-hidden="true">
                         <label for="website">Сайт</label>

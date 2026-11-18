@@ -26,6 +26,18 @@ final class Response
         return new self('', $status, ['Location' => $location]);
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public static function json(array $payload, int $status = 200): self
+    {
+        return new self(
+            (string) json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            $status,
+            ['Content-Type' => 'application/json; charset=UTF-8'],
+        );
+    }
+
     public function send(): void
     {
         http_response_code($this->status);
