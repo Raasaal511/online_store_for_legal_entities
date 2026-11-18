@@ -36,8 +36,8 @@ docker run -d --name snabplus-mysql \
   -e MYSQL_PASSWORD=snabplus \
   -p 3307:3306 mysql:8.0
 
-docker exec -i snabplus-mysql mysql -uroot -proot < sql/schema.sql
-docker exec -i snabplus-mysql mysql -uroot -proot < sql/seed.sql
+docker exec -i snabplus-mysql mysql -uroot -proot --default-character-set=utf8mb4 < sql/schema.sql
+docker exec -i snabplus-mysql mysql -uroot -proot --default-character-set=utf8mb4 < sql/seed.sql
 ```
 
 Либо:
