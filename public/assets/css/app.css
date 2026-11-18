@@ -13,6 +13,8 @@
     --success: #067647;
     --shadow: 0 18px 40px rgba(11, 31, 51, 0.08);
     --radius: 14px;
+    --content-width: 1120px;
+    --content-gutter: 1.25rem;
     --font-sans: "Manrope", sans-serif;
     --font-serif: "Source Serif 4", Georgia, serif;
 }
@@ -53,7 +55,7 @@ a:hover {
 }
 
 .container {
-    width: min(1120px, calc(100% - 2rem));
+    width: min(var(--content-width), calc(100% - (var(--content-gutter) * 2)));
     margin-inline: auto;
 }
 
@@ -130,8 +132,11 @@ a:hover {
 .hero-content {
     position: relative;
     padding: 7rem 0 4.5rem;
-    max-width: 720px;
     animation: rise 0.8s ease both;
+}
+
+.hero-content > * {
+    max-width: 40rem;
 }
 
 .eyebrow {
