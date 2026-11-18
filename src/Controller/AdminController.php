@@ -115,7 +115,7 @@ final class AdminController
         $updated = Bootstrap::applicationService()->changeStatus($id, $status);
 
         $_SESSION['admin_flash'] = $updated
-            ? ['type' => 'success', 'message' => 'Статус заявки обновлён.']
+            ? ['type' => 'success', 'message' => 'Статус заявки #' . $id . ' обновлён: ' . $status->label() . '.']
             : ['type' => 'error', 'message' => 'Заявка не найдена.'];
 
         return Response::redirect($this->redirectWithQuery($request));

@@ -80,14 +80,14 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
                         </p>
                         <p class="app-row__date"><?= htmlspecialchars($item->createdAt->format('d.m.Y H:i'), ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
-                    <form method="post" action="/admin/status" class="status-form">
+                    <form method="post" action="/admin/status" class="status-form" data-auto-status>
                         <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                         <input type="hidden" name="id" value="<?= (int) $item->id ?>">
                         <?php if ($statusValue !== ''): ?><input type="hidden" name="filter_status" value="<?= htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <?php if ($qValue !== ''): ?><input type="hidden" name="q" value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <?php if ($dateFrom !== ''): ?><input type="hidden" name="date_from" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
                         <?php if ($dateTo !== ''): ?><input type="hidden" name="date_to" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>"><?php endif; ?>
-                        <label class="sr-only" for="status-<?= (int) $item->id ?>">Статус</label>
+                        <label class="status-form__label" for="status-<?= (int) $item->id ?>">Сменить статус</label>
                         <select id="status-<?= (int) $item->id ?>" name="status" aria-label="Сменить статус заявки #<?= (int) $item->id ?>">
                             <?php foreach ($statuses as $status): ?>
                                 <option value="<?= $status->value ?>" <?= $item->status === $status ? 'selected' : '' ?>>
@@ -95,7 +95,6 @@ $dateTo = isset($query['date_to']) ? (string) $query['date_to'] : '';
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <button class="btn btn--small btn--ghost" type="submit">OK</button>
                     </form>
                 </article>
             <?php endforeach; ?>
