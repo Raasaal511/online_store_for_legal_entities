@@ -329,6 +329,7 @@ a:hover {
 .login-panel {
     width: min(420px, 100%);
     margin: 3rem auto;
+    border-radius: 14px;
 }
 
 .request-form {
@@ -632,10 +633,6 @@ a:hover {
     border: 1px dashed var(--line);
     border-radius: 12px;
     color: var(--muted);
-}
-
-.login-panel {
-    border-radius: 14px;
 }
 
 @keyframes rise {
