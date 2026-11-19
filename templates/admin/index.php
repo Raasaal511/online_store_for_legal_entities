@@ -27,54 +27,63 @@ $dirValue = $filter->direction;
         </div>
     <?php endif; ?>
 
-    <form class="filters" method="get" action="/admin" data-auto-filter>
-        <div class="field">
-            <label for="status">Статус</label>
-            <select id="status" name="status">
-                <option value="">Все</option>
-                <?php foreach ($statuses as $status): ?>
-                    <option value="<?= $status->value ?>" <?= $statusValue === $status->value ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($status->label(), ENT_QUOTES, 'UTF-8') ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+    <form class="admin-toolbar" method="get" action="/admin" data-auto-filter>
+        <div class="toolbar-block">
+            <p class="toolbar-block__title">Фильтры</p>
+            <div class="toolbar-block__grid toolbar-block__grid--filters">
+                <div class="field">
+                    <label for="status">Статус</label>
+                    <select id="status" name="status">
+                        <option value="">Все</option>
+                        <?php foreach ($statuses as $status): ?>
+                            <option value="<?= $status->value ?>" <?= $statusValue === $status->value ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($status->label(), ENT_QUOTES, 'UTF-8') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="field field--grow">
+                    <label for="q">Поиск</label>
+                    <input id="q" name="q" type="search" placeholder="Компания, телефон, email"
+                           value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>">
+                </div>
+                <div class="field">
+                    <label for="date_from">С</label>
+                    <input id="date_from" name="date_from" type="date" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>">
+                </div>
+                <div class="field">
+                    <label for="date_to">По</label>
+                    <input id="date_to" name="date_to" type="date" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>">
+                </div>
+            </div>
         </div>
-        <div class="field">
-            <label for="q">Поиск</label>
-            <input id="q" name="q" type="search" placeholder="Компания, телефон, email"
-                   value="<?= htmlspecialchars($qValue, ENT_QUOTES, 'UTF-8') ?>">
-        </div>
-        <div class="field">
-            <label for="date_from">С</label>
-            <input id="date_from" name="date_from" type="date" value="<?= htmlspecialchars($dateFrom, ENT_QUOTES, 'UTF-8') ?>">
-        </div>
-        <div class="field">
-            <label for="date_to">По</label>
-            <input id="date_to" name="date_to" type="date" value="<?= htmlspecialchars($dateTo, ENT_QUOTES, 'UTF-8') ?>">
-        </div>
-        <div class="field">
-            <label for="sort">Сортировка</label>
-            <select id="sort" name="sort">
-                <?php foreach (ApplicationFilter::sortOptions() as $value => $label): ?>
-                    <option value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= $sortValue === $value ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="field">
-            <label for="dir">Порядок</label>
-            <select id="dir" name="dir">
-                <option value="<?= ApplicationFilter::DIR_DESC ?>" <?= $dirValue === ApplicationFilter::DIR_DESC ? 'selected' : '' ?>>
-                    По убыванию
-                </option>
-                <option value="<?= ApplicationFilter::DIR_ASC ?>" <?= $dirValue === ApplicationFilter::DIR_ASC ? 'selected' : '' ?>>
-                    По возрастанию
-                </option>
-            </select>
-        </div>
-        <div class="filters-actions">
-            <a class="btn btn--ghost btn--small" href="/admin">Сбросить</a>
+
+        <div class="toolbar-block toolbar-block--sort">
+            <p class="toolbar-block__title">Сортировка</p>
+            <div class="toolbar-block__grid toolbar-block__grid--sort">
+                <div class="field">
+                    <label for="sort">Поле</label>
+                    <select id="sort" name="sort">
+                        <?php foreach (ApplicationFilter::sortOptions() as $value => $label): ?>
+                            <option value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= $sortValue === $value ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="dir">Порядок</label>
+                    <select id="dir" name="dir">
+                        <option value="<?= ApplicationFilter::DIR_DESC ?>" <?= $dirValue === ApplicationFilter::DIR_DESC ? 'selected' : '' ?>>
+                            По убыванию
+                        </option>
+                        <option value="<?= ApplicationFilter::DIR_ASC ?>" <?= $dirValue === ApplicationFilter::DIR_ASC ? 'selected' : '' ?>>
+                            По возрастанию
+                        </option>
+                    </select>
+                </div>
+                <a class="btn btn--ghost btn--small toolbar-reset" href="/admin">Сбросить</a>
+            </div>
         </div>
     </form>
 
