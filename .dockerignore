@@ -1,0 +1,9 @@
+.git
+.github
+.env
+vendor
+.phpunit.cache
+.phpunit.result.cache
+docs
+*.md
+terminals
