@@ -516,58 +516,56 @@ a:hover {
 }
 
 .admin-toolbar {
-    display: grid;
-    gap: 0.55rem;
-    margin-bottom: 0.85rem;
-}
-
-.toolbar-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.45rem 0.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0.55rem 0.65rem;
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 0.7rem 0.8rem 0.8rem;
-}
-
-.toolbar-block__title {
-    margin: 0 0 0.45rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.toolbar-block__grid {
-    display: grid;
-    gap: 0.55rem;
-    align-items: end;
-}
-
-.toolbar-block__grid--filters {
-    grid-template-columns: 8.5rem minmax(10rem, 1.4fr) 8.5rem 8.5rem;
-}
-
-.toolbar-block__grid--sort {
-    grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1fr) auto;
+    border-radius: 10px;
 }
 
 .admin-toolbar .field {
-    gap: 0.25rem;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.admin-toolbar .field--search {
+    flex: 1 1 12rem;
+    min-width: 10rem;
 }
 
 .admin-toolbar .field label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    line-height: 1;
 }
 
 .admin-toolbar .field input,
 .admin-toolbar .field select {
-    padding: 0.45rem 0.6rem;
-    font-size: 0.88rem;
+    padding: 0.38rem 0.5rem;
+    font-size: 0.84rem;
+    border-radius: 8px;
+    min-height: 2rem;
+}
+
+.admin-toolbar .field select {
+    min-width: 6.5rem;
+}
+
+.toolbar-divider {
+    width: 1px;
+    align-self: stretch;
+    margin: 0.15rem 0.15rem 0;
+    background: var(--line);
 }
 
 .toolbar-reset {
     align-self: end;
     white-space: nowrap;
+    padding: 0.38rem 0.7rem;
+    min-height: 2rem;
 }
 
 .apps-list {
@@ -731,14 +729,8 @@ a:hover {
         grid-template-columns: 1fr;
     }
 
-    .toolbar-block__grid--filters,
-    .toolbar-block__grid--sort {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .toolbar-reset {
-        grid-column: 1 / -1;
-        justify-self: start;
+    .toolbar-divider {
+        display: none;
     }
 
     .hero-content {
@@ -792,10 +784,21 @@ a:hover {
 }
 
 @media (max-width: 700px) {
-    .field-row,
-    .toolbar-block__grid--filters,
-    .toolbar-block__grid--sort {
+    .field-row {
         grid-template-columns: 1fr;
+    }
+
+    .admin-toolbar .field,
+    .admin-toolbar .field--search {
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+
+    .admin-toolbar .field--search {
+        flex-basis: 100%;
+    }
+
+    .toolbar-reset {
+        margin-left: auto;
     }
 
     .phone-input {
