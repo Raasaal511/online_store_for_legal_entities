@@ -118,7 +118,3 @@ composer test
 - создание заявки
 - фильтры и смена статуса
 - CSRF и авторизация админки
-
-## Задача №1
-
-Текстовый ответ по инфраструктуре: [`docs/task1-infrastructure.txt`](docs/task1-infrastructure.txt)
